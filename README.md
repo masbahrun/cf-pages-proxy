@@ -1,7 +1,6 @@
 # Cloudflare Pages Root Proxy
 
-Proxy ini menggunakan **Cloudflare Pages Function** untuk meneruskan semua request dari **root domain Pages** ke backend tertentu.  
-
+Proxy ini menggunakan **Cloudflare Pages Function** untuk meneruskan semua request dari root domain Pages ke backend tertentu.  
 Semua method, header, body, query, dan redirect diteruskan **apa adanya**, sehingga Pages bertindak sebagai **reverse proxy** penuh.
 
 ---
@@ -19,16 +18,21 @@ Semua method, header, body, query, dan redirect diteruskan **apa adanya**, sehin
 
 ## 🔹 Contoh Mapping
 
-| Pages URL                         | Target Backend URL                           |
-|----------------------------------|---------------------------------------------|
-| `/getLink`                        | `https://target-domain.com/function/v1/getLink` |
-| `/foo/bar`                        | `https://target-domain.com/function/v1/foo/bar` |
-| `/`                               | `https://target-domain.com/function/v1/`    |
+| Pages URL          | Target Backend URL                           |
+|-------------------|---------------------------------------------|
+| `/getLink`        | `https://target-domain.com/function/v1/getLink` |
+| `/foo/bar`        | `https://target-domain.com/function/v1/foo/bar` |
+| `/`               | `https://target-domain.com/function/v1/`    |
 
 ---
 
 ## 🔹 Struktur Project
 
+cloudflare-pages-proxy/
+├─ functions/
+│ └─ [...catchall].js <-- Catch-all proxy function
+├─ package.json <-- Opsional
+└─ README.md <-- Dokumen ini
 
 
 ---
@@ -53,3 +57,21 @@ curl -i -X POST https://<project>.pages.dev/api/test \
   -H "Authorization: Bearer token123" \
   -H "Content-Type: application/json" \
   -d '{"name":"test"}'
+Semua header, method, body, query diteruskan ke backend.
+
+Response backend dikembalikan apa adanya, termasuk redirect.
+
+🔹 Kustomisasi
+TARGET_BASE: ubah di functions/[...catchall].js sesuai domain backend:
+
+const TARGET_BASE = 'https://target-domain.com/function/v1/'
+Bisa digunakan untuk API internal atau publik, tergantung kebutuhan.
+
+🔹 Catatan
+Pastikan backend siap menerima header, method, dan path apa saja.
+
+Redirect 3xx diteruskan agar client menerima lokasi baru.
+
+Jika ingin menambahkan header khusus (misal X-Api-Key), bisa set di file [...catchall].js.
+
+Repository ini siap deploy root domain Cloudflare Pages sebagai proxy murni.

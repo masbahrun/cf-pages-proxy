@@ -3,7 +3,7 @@ export async function onRequest(context) {
   const { request, params } = context
 
   // Base URL backend
-  const TARGET_BASE = 'https://yulafqmjwgmbqtdggtqt.supabase.co/functions/v1/'
+  const TARGET_BASE = 'https://pwcjcdbhzckfnimnpnyo.supabase.co/functions/v1/'
 
   // Tangkap sisa path
   const path = params.catchall ? params.catchall : ''
